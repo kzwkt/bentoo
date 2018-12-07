@@ -1,4 +1,6 @@
-# Bentoo ## "updated based on profile 1.3, experimental yet!!!"
+# Bentoo
+
+## updated based on profile 1.3, experimental yet!!!
 
 Bentōō is an initiative to distribute an user-friendly version of Funtoo linux Stage4 to new users, with more update packages, focusing on agility, security privacy and games.
 
@@ -14,7 +16,7 @@ sync-type = git
 sync-uri = https://github.com/lucascouts/bentoo.git
 priority= 99
 ```
-## then change to new branch.
+#### then change to new branch.
 ```
 # cd /usr/local/portage/bentoo && git checkout next
 ```
@@ -28,7 +30,7 @@ Invoke the following:
 ```
 # layman -o https://raw.github.com/lucascouts/bentoo/master/repositories.xml -f -a bentoo
 ```
-## then change to new branch.
+#### then change to new branch.
 ```
 # cd /var/lib/layman/bentoo && git checkout next
 ```
