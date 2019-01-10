@@ -2,11 +2,22 @@
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
 	<maintainer type="person">
-		<email>jpizarrocallejas@gmail.com</email>
-		<name>Jorge Pizarro Callejas</name>
-		<description>Jorgicio Gentoo Overlay</description>
+		<email>gentoo@chaoslab.org</email>
+		<name>Ian Moone</name>
 	</maintainer>
-    <use>
-        <flag name="system-node">Use node.js system implementation instead of bundled.</flag>
-    </use>
+	<upstream>
+		<remote-id type="github">atom/atom</remote-id>
+		<bugs-to>https://github.com/atom/atom/issues</bugs-to>
+		<doc>https://atom.io/docs</doc>
+	</upstream>
+	<use>
+		<flag name="audit">
+			Run 'npm audit' to perform security reports and try to fix
+			known vulnerabilities (requires npm v6)
+		</flag>
+		<flag name="node-prune">
+			Use <pkg>dev-util/node-prune</pkg> to remove unnecessary
+			files from node_modules
+		</flag>
+	</use>
 </pkgmetadata>
