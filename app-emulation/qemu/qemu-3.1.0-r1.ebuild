@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="7"
@@ -94,7 +94,7 @@ SOFTMMU_TOOLS_DEPEND="
 	aio? ( dev-libs/libaio[static-libs(+)] )
 	alsa? ( >=media-libs/alsa-lib-1.0.13 )
 	bzip2? ( app-arch/bzip2[static-libs(+)] )
-	capstone? ( dev-libs/capstone )
+	capstone? ( dev-libs/capstone:= )
 	caps? ( sys-libs/libcap-ng[static-libs(+)] )
 	curl? ( >=net-misc/curl-7.15.4[static-libs(+)] )
 	fdt? ( >=sys-apps/dtc-1.4.2[static-libs(+)] )
@@ -185,7 +185,6 @@ CDEPEND="
 DEPEND="${CDEPEND}
 	${PYTHON_DEPS}
 	dev-lang/perl
-	=dev-lang/python-2*
 	sys-apps/texinfo
 	virtual/pkgconfig
 	kernel_linux? ( >=sys-kernel/linux-headers-2.6.35 )
@@ -207,6 +206,7 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-2.5.0-sysmacros.patch
 	"${FILESDIR}"/${PN}-2.11.1-capstone_include_path.patch
 	"${FILESDIR}"/${PN}-3.1.0-CVE-2018-20123.patch
+	"${FILESDIR}"/${PN}-3.1.0-CVE-2019-3812.patch
 	#"${WORKDIR}"/patches
 )
 
@@ -676,7 +676,10 @@ src_install() {
 		emake DESTDIR="${ED}" install
 
 		# This might not exist if the test failed. #512010
-		[[ -e check-report.html ]] && dohtml check-report.html
+		if [[ -e check-report.html ]]; then
+			docinto html
+			dodoc check-report.html
+		fi
 
 		if use kernel_linux; then
 			udev_newrules "${FILESDIR}"/65-kvm.rules-r1 65-kvm.rules
@@ -754,7 +757,7 @@ src_install() {
 firmware_abi_change() {
 	local pv
 	for pv in ${REPLACING_VERSIONS}; do
-		if ! version_is_at_least ${FIRMWARE_ABI_VERSION} ${pv}; then
+		if ver_test $pv -lt ${FIRMWARE_ABI_VERSION}; then
 			return 0
 		fi
 	done
@@ -766,7 +769,8 @@ pkg_postinst() {
 		udev_reload
 	fi
 
-	fcaps cap_net_admin /usr/libexec/qemu-bridge-helper
+	[[ -f ${D}/usr/libexec/qemu-bridge-helper ]] && \
+		fcaps cap_net_admin /usr/libexec/qemu-bridge-helper
 
 	DISABLE_AUTOFORMATTING=true
 	readme.gentoo_print_elog
