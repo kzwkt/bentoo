@@ -1,4 +1,4 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI="6"
@@ -59,7 +59,7 @@ HTTP_FANCYINDEX_MODULE_URI="https://github.com/aperezdc/ngx-fancyindex/archive/v
 HTTP_FANCYINDEX_MODULE_WD="${WORKDIR}/ngx-fancyindex-${HTTP_FANCYINDEX_MODULE_PV}"
 
 # http_lua (https://github.com/openresty/lua-nginx-module, BSD license)
-HTTP_LUA_MODULE_PV="0.10.13"
+HTTP_LUA_MODULE_PV="0.10.14"
 HTTP_LUA_MODULE_P="ngx_http_lua-${HTTP_LUA_MODULE_PV}"
 HTTP_LUA_MODULE_URI="https://github.com/openresty/lua-nginx-module/archive/v${HTTP_LUA_MODULE_PV}.tar.gz"
 HTTP_LUA_MODULE_WD="${WORKDIR}/lua-nginx-module-${HTTP_LUA_MODULE_PV}"
@@ -156,7 +156,7 @@ GEOIP2_MODULE_URI="https://github.com/leev/ngx_http_geoip2_module/archive/${GEOI
 GEOIP2_MODULE_WD="${WORKDIR}/ngx_http_geoip2_module-${GEOIP2_MODULE_PV}"
 
 # njs-module (https://github.com/nginx/njs, as-is)
-NJS_MODULE_PV="0.2.7"
+NJS_MODULE_PV="0.2.8"
 NJS_MODULE_P="njs-${NJS_MODULE_PV}"
 NJS_MODULE_URI="https://github.com/nginx/njs/archive/${NJS_MODULE_PV}.tar.gz"
 NJS_MODULE_WD="${WORKDIR}/njs-${NJS_MODULE_PV}"
@@ -310,7 +310,7 @@ CDEPEND="
 		)
 	)
 	nginx_modules_http_xslt? ( dev-libs/libxml2:= dev-libs/libxslt )
-	nginx_modules_http_lua? ( !luajit? ( dev-lang/lua:0= ) luajit? ( dev-lang/luajit:2= ) )
+	nginx_modules_http_lua? ( dev-lang/luajit:2= )
 	nginx_modules_http_auth_pam? ( virtual/pam )
 	nginx_modules_http_metrics? ( dev-libs/yajl:= )
 	nginx_modules_http_dav_ext? ( dev-libs/libxml2 )
@@ -336,7 +336,10 @@ PDEPEND="vim-syntax? ( app-vim/nginx-syntax )"
 
 REQUIRED_USE="pcre-jit? ( pcre )
 	nginx_modules_http_grpc? ( http2 )
-	nginx_modules_http_lua? ( nginx_modules_http_rewrite )
+	nginx_modules_http_lua? (
+		luajit
+		nginx_modules_http_rewrite
+	)
 	nginx_modules_http_naxsi? ( pcre )
 	nginx_modules_http_dav_ext? ( nginx_modules_http_dav )
 	nginx_modules_http_metrics? ( nginx_modules_http_stub_status )
@@ -513,13 +516,8 @@ src_configure() {
 
 	if use nginx_modules_http_lua; then
 		http_enabled=1
-		if use luajit; then
-			export LUAJIT_LIB=$(pkg-config --variable libdir luajit)
-			export LUAJIT_INC=$(pkg-config --variable includedir luajit)
-		else
-			export LUA_LIB=$(pkg-config --variable libdir lua)
-			export LUA_INC=$(pkg-config --variable includedir lua)
-		fi
+		export LUAJIT_LIB=$(pkg-config --variable libdir luajit)
+		export LUAJIT_INC=$(pkg-config --variable includedir luajit)
 		myconf+=( --add-module=${DEVEL_KIT_MODULE_WD} )
 		myconf+=( --add-module=${HTTP_LUA_MODULE_WD} )
 	fi
