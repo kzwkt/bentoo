@@ -102,7 +102,7 @@ RDEPEND="${CDEPEND}
 "
 
 PDEPEND="
-	xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )"
+	xorg? ( >=x11-base/xorg-drivers-1.20 )"
 
 REQUIRED_USE="!minimal? (
 		|| ( ${IUSE_SERVERS} )
