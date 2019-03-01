@@ -1,16 +1,17 @@
-# Copyright 1999-2018 Gentoo Authors
+# Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=5
+EAPI=6
 
 XORG_DOC=doc
-inherit xorg-2 multilib versionator flag-o-matic
+XORG_EAUTORECONF="yes"
+inherit xorg-3 multilib flag-o-matic
 EGIT_REPO_URI="https://anongit.freedesktop.org/git/xorg/xserver.git"
 
 DESCRIPTION="X.Org X servers"
 SLOT="0/${PV}"
 if [[ ${PV} != 9999* ]]; then
-	KEYWORDS="alpha amd64 arm ~arm64 hppa ia64 ~mips ppc ppc64 ~s390 ~sh sparc x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux"
+	KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~x86-linux"
 fi
 
 IUSE_SERVERS="dmx kdrive wayland xephyr xnest xorg xvfb"
@@ -101,7 +102,7 @@ RDEPEND="${CDEPEND}
 "
 
 PDEPEND="
-	xorg? ( >=x11-base/xorg-drivers-$(get_version_component_range 1-2) )"
+	xorg? ( >=x11-base/xorg-drivers-$(ver_cut 1-2) )"
 
 REQUIRED_USE="!minimal? (
 		|| ( ${IUSE_SERVERS} )
@@ -110,6 +111,9 @@ REQUIRED_USE="!minimal? (
 	xephyr? ( kdrive )"
 
 UPSTREAMED_PATCHES=(
+	"${FILESDIR}"/${P}-shm-reindent-shm_tmpfile-to-follow-our-standards.patch
+	"${FILESDIR}"/${P}-shm-Pick-the-shm-dir-at-run-time-not-build-time.patch
+	"${FILESDIR}"/${P}-shm-Use-memfd_create-when-possible.patch
 )
 
 PATCHES=(
@@ -119,20 +123,12 @@ PATCHES=(
 	"${FILESDIR}"/${PN}-1.18-support-multiple-Files-sections.patch
 )
 
-pkg_pretend() {
-	# older gcc is not supported
-	[[ "${MERGE_TYPE}" != "binary" && $(gcc-major-version) -lt 4 ]] && \
-		die "Sorry, but gcc earlier than 4.0 will not work for xorg-server."
-}
-
 pkg_setup() {
 	if use wayland && ! use glamor; then
 		ewarn "glamor is necessary for acceleration under Xwayland."
 		ewarn "Performance may be unacceptable without it."
 	fi
-}
 
-src_configure() {
 	# localstatedir is used for the log location; we need to override the default
 	#	from ebuild.sh
 	# sysconfdir is used for the xorg.conf location; same applies
@@ -176,18 +172,16 @@ src_configure() {
 		--with-os-vendor=Gentoo
 		--with-sha1=libcrypto
 	)
-
-	xorg-2_src_configure
 }
 
 src_install() {
-	xorg-2_src_install
+	default
 
 	server_based_install
 
 	if ! use minimal && use xorg; then
 		# Install xorg.conf.example into docs
-		dodoc "${AUTOTOOLS_BUILD_DIR}"/hw/xfree86/xorg.conf.example
+		dodoc "${S}"/hw/xfree86/xorg.conf.example
 	fi
 
 	newinitd "${FILESDIR}"/xdm-setup.initd-1 xdm-setup
