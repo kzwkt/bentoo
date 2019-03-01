@@ -8,7 +8,7 @@
 # Author: Tomáš Chvátal <scarabeus@gentoo.org>
 # Author: Donnie Berkholz <dberkholz@gentoo.org>
 # Author: Matt Turner <mattst88@gentoo.org>
-# @SUPPORTED_EAPIS: 7
+# @SUPPORTED_EAPIS: 6 7
 # @BLURB: Reduces code duplication in the modularized X11 ebuilds.
 # @DESCRIPTION:
 # This eclass makes trivial X ebuilds possible for apps, drivers,
@@ -43,7 +43,7 @@ fi
 
 EXPORTED_FUNCTIONS="src_prepare src_configure src_unpack src_compile src_install"
 case "${EAPI:-0}" in
-	7) ;;
+	[67]) ;;
 	*) die "EAPI=${EAPI} is not supported" ;;
 esac
 
