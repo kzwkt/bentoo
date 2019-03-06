@@ -29,14 +29,8 @@ DEPEND="${RDEPEND}
 PDEPEND="app-misc/ca-certificates"
 
 PATCHES=(
-	"${FILESDIR}"/${P}-make-sure-build_SYS_str_reasons_preserves_errno.patch
-	"${FILESDIR}"/${P}-preserve-errno-on-dlopen.patch
-	"${FILESDIR}"/${P}-fix-wrong-return-value-in-ssl3_ctx_ctrl.patch
-	"${FILESDIR}"/${P}-revert-reduce-stack-usage-in-tls13_hkdf_expand.patch
-	"${FILESDIR}"/${P}-fix-some-SSL_export_keying_material-issues.patch
-	"${FILESDIR}"/${P}-preserve-system-error-number-in-a-few-more-places.patch
-	"${FILESDIR}"/${P}-fix-a-minor-nit-in-hkdflabel-size.patch
-	"${FILESDIR}"/${P}-fix-cert-with-rsa-instead-of-rsaEncryption.patch
+	"${FILESDIR}"/${PN}-1.1.0j-parallel_install_fix.patch #671602
+	"${FILESDIR}"/${P}-CVE-2019-1543.patch
 )
 
 # This does not copy the entire Fedora patchset, but JUST the parts that
@@ -71,12 +65,18 @@ src_prepare() {
 		for i in "${FEDORA_SOURCE[@]}" ; do
 			cp -f "${DISTDIR}"/"${P}_${i}" "${WORKDIR}"/"${i}" || die
 		done
+
 		# .spec %prep
 		bash "${WORKDIR}"/"${SOURCE1}" || die
 		cp -f "${WORKDIR}"/"${SOURCE12}" "${S}"/crypto/ec/ || die
 		cp -f "${WORKDIR}"/"${SOURCE13}" "${S}"/test/ || die
 		for i in "${FEDORA_PATCH[@]}" ; do
-			eapply "${DISTDIR}"/"${i}"
+			if [[ "${i}" == "${PATCH37}" ]] ; then
+				# apply our own for OpenSSL 1.1.1b adjusted version of this patch
+				eapply "${FILESDIR}"/openssl-1.1.1b-ec-curves-patch.patch
+			else
+				eapply "${DISTDIR}"/"${i}"
+			fi
 		done
 		# Also see the configure parts below:
 		# enable-ec \
