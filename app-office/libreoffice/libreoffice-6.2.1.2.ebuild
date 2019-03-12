@@ -1,7 +1,7 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=6
 
 PYTHON_COMPAT=( python2_7 python3_{5,6,7} )
 PYTHON_REQ_USE="threads(+),xml"
@@ -237,7 +237,7 @@ RDEPEND="${COMMON_DEPEND}
 	vlc? ( media-video/vlc )
 "
 if [[ ${MY_PV} != *9999* ]] && [[ ${PV} != *_* ]]; then
-	PDEPEND="=app-office/libreoffice-l10n-$(ver_cut 1-2)*"
+	PDEPEND="app-office/libreoffice-l10n"
 else
 	# Translations are not reliable on live ebuilds
 	# rather force people to use english only.
