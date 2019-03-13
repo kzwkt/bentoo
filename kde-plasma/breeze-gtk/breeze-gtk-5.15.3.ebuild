@@ -18,6 +18,10 @@ BDEPEND="${PYTHON_DEPS}
 	dev-lang/sassc
 "
 
+DEPEND="${RDEPEND}
+	dev-lang/sassc
+"
+
 python_check_deps() {
 	has_version "dev-python/pycairo[${PYTHON_USEDEP}]"
 }
