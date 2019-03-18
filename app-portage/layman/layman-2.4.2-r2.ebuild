@@ -1,7 +1,7 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI="6"
+EAPI="7"
 
 PYTHON_COMPAT=( python{2_7,3_4,3_5,3_6,3_7} pypy )
 PYTHON_REQ_USE="xml(+),sqlite?"
@@ -90,7 +90,8 @@ python_install_all() {
 	doins etc/layman.cfg
 
 	doman doc/layman.8
-	dohtml doc/layman.8.html
+	docinto html
+	dodoc doc/layman.8.html
 
 	keepdir /var/lib/layman
 	keepdir /etc/layman/overlays

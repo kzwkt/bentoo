@@ -32,6 +32,8 @@ if [[ ${MOZ_ESR} == 1 ]]; then
 fi
 MOZ_P="${PN}-${MOZ_PV}"
 
+LLVM_MAX_SLOT=8
+
 inherit check-reqs flag-o-matic toolchain-funcs gnome2-utils llvm mozcoreconf-v6 pax-utils xdg-utils autotools mozlinguas-v2
 
 DESCRIPTION="Thunderbird Mail Client"
@@ -94,10 +96,10 @@ CDEPEND="
 	)
 	system-icu? ( >=dev-libs/icu-59.1:= )
 	system-jpeg? ( >=media-libs/libjpeg-turbo-1.2.1:= )
-	system-libevent? ( >=dev-libs/libevent-2.0:0= )
+	system-libevent? ( >=dev-libs/libevent-2.0:0=[threads] )
 	system-libvpx? (
 		>=media-libs/libvpx-1.5.0:0=[postproc]
-		<media-libs/libvpx-1.8
+		<media-libs/libvpx-1.8:0=[postproc]
 	)
 	system-sqlite? ( >=dev-db/sqlite-3.23.1:3[secure-delete,debug=] )
 	wifi? (
@@ -114,11 +116,31 @@ DEPEND="${CDEPEND}
 	app-arch/unzip
 	>=sys-devel/binutils-2.30
 	sys-apps/findutils
-	>=sys-devel/llvm-4.0.1
-	>=sys-devel/clang-4.0.1
-	clang? (
-		>=sys-devel/llvm-4.0.1[gold]
-		>=sys-devel/lld-4.0.1
+	|| (
+		(
+			sys-devel/clang:8
+			!clang? ( sys-devel/llvm:8 )
+			clang? (
+				=sys-devel/lld-8*
+				sys-devel/llvm:8[gold]
+			)
+		)
+		(
+			sys-devel/clang:7
+			!clang? ( sys-devel/llvm:7 )
+			clang? (
+				=sys-devel/lld-7*
+				sys-devel/llvm:7[gold]
+			)
+		)
+		(
+			sys-devel/clang:6
+			!clang? ( sys-devel/llvm:6 )
+			clang? (
+				=sys-devel/lld-6*
+				sys-devel/llvm:6[gold]
+			)
+		)
 	)
 	pulseaudio? ( media-sound/pulseaudio )
 	elibc_glibc? (
@@ -155,6 +177,22 @@ REQUIRED_USE="wifi? ( dbus )"
 S="${WORKDIR}/${MOZ_P%b[0-9]*}"
 
 BUILD_OBJ_DIR="${S}/tbird"
+
+llvm_check_deps() {
+	if ! has_version "sys-devel/clang:${LLVM_SLOT}" ; then
+		ewarn "sys-devel/clang:${LLVM_SLOT} is missing! Cannot use LLVM slot ${LLVM_SLOT} ..."
+		return 1
+	fi
+
+	if use clang ; then
+		if ! has_version "=sys-devel/lld-${LLVM_SLOT}*" ; then
+			ewarn "=sys-devel/lld-${LLVM_SLOT}* is missing! Cannot use LLVM slot ${LLVM_SLOT} ..."
+			return 1
+		fi
+	fi
+
+	einfo "Will use LLVM slot ${LLVM_SLOT}!"
+}
 
 pkg_setup() {
 	moz_pkgsetup

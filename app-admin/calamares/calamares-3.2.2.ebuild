@@ -74,7 +74,6 @@ src_configure() {
 	local mycmakeargs=(
 		-DWEBVIEW_FORCE_WEBKIT=OFF
 		-DWITH_PYTHONQT=$(usex pythonqt)
-		-DSKIP_MODULES="services-systemd openrcdmcryptcfg luksbootkeyfile luksopenswaphookcfg dracut dracutlukscfg"
 	)
 
 	kde5_src_configure

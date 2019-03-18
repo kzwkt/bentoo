@@ -1,23 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
 	<maintainer type="person">
-		<email>gentoo@chaoslab.org</email>
-		<name>Ian Moone</name>
+		<email>elvis@magic.io</email>
+		<name>Elvis Pranskevichus</name>
+	</maintainer>
+	<maintainer type="person">
+		<email>cynede@gentoo.org</email>
+	</maintainer>
+	<maintainer type="project">
+		<email>proxy-maint@gentoo.org</email>
+		<name>Proxy Maintainers</name>
 	</maintainer>
 	<upstream>
-		<remote-id type="github">atom/atom</remote-id>
-		<bugs-to>https://github.com/atom/atom/issues</bugs-to>
-		<doc>https://atom.io/docs</doc>
+		<remote-id type="github">atom/node-spellchecker</remote-id>
 	</upstream>
-	<use>
-		<flag name="audit">
-			Run 'npm audit' to perform security reports and try to fix
-			known vulnerabilities (requires npm v6)
-		</flag>
-		<flag name="node-prune">
-			Use <pkg>dev-util/node-prune</pkg> to remove unnecessary
-			files from node_modules
-		</flag>
-	</use>
 </pkgmetadata>

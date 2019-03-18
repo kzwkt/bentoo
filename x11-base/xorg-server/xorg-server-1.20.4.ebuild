@@ -1,7 +1,7 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 XORG_DOC=doc
 XORG_EAUTORECONF="yes"
@@ -102,7 +102,7 @@ RDEPEND="${CDEPEND}
 "
 
 PDEPEND="
-	xorg? ( >=x11-base/xorg-drivers-1.20 )"
+	xorg? ( >=x11-base/xorg-drivers-$(ver_cut 1-2) )"
 
 REQUIRED_USE="!minimal? (
 		|| ( ${IUSE_SERVERS} )
@@ -175,7 +175,7 @@ pkg_setup() {
 }
 
 src_install() {
-	default
+	xorg-3_src_install
 
 	server_based_install
 
@@ -196,8 +196,10 @@ src_install() {
 }
 
 pkg_postinst() {
-	# sets up libGL and DRI2 symlinks if needed (ie, on a fresh install)
-	eselect opengl set xorg-x11 --use-old
+	if ! use minimal; then
+		# sets up libGL and DRI2 symlinks if needed (ie, on a fresh install)
+		eselect opengl set xorg-x11 --use-old
+	fi
 }
 
 pkg_postrm() {
