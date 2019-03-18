@@ -1,7 +1,7 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 KDE_HANDBOOK="optional"
 KDE_TEST="optional"
@@ -87,6 +87,8 @@ PDEPEND="
 RESTRICT+=" test"
 
 src_prepare() {
+	rm -r po/id/docs || die "failed to remove Indonesian docs" # bug 680136
+
 	kde5_src_prepare
 	use multimedia || eapply "${FILESDIR}/${PN}-gstreamer-optional.patch"
 

@@ -1,7 +1,7 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 KDE_HANDBOOK="forceoptional"
 KDE_TEST="true"
@@ -113,6 +113,11 @@ RDEPEND="${COMMON_DEPEND}
 	!<kde-apps/kde4-l10n-17.08.1-r1
 	!kde-apps/knetattach[handbook]
 "
+
+src_prepare() {
+	rm -r po/id/docs || die "failed to remove Indonesian docs" # bug 680162
+	kde5_src_prepare
+}
 
 src_configure() {
 	local mycmakeargs=(

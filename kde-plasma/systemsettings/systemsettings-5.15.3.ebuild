@@ -1,7 +1,7 @@
 # Copyright 1999-2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=7
 
 KDE_HANDBOOK="forceoptional"
 inherit kde5
@@ -42,6 +42,11 @@ RDEPEND="${DEPEND}
 	$(add_frameworks_dep kirigami)
 	gtk? ( $(add_plasma_dep kde-gtk-config) )
 "
+
+src_prepare() {
+	rm -r po/id/docs || die "failed to remove Indonesian docs" # bug 680162
+	kde5_src_prepare
+}
 
 src_configure() {
 	local mycmakeargs=(
