@@ -19,7 +19,7 @@ sr sv-SE ta te th tr uk uz vi xh zh-CN zh-TW )
 # Convert the ebuild version to the upstream mozilla version, used by mozlinguas
 MOZ_PV="${PV/_alpha/a}" # Handle alpha for SRC_URI
 MOZ_PV="${MOZ_PV/_beta/b}" # Handle beta for SRC_URI
-MOZ_PV="${MOZ_PV/_rc/rc}" # Handle rc for SRC_URI
+MOZ_PV="${MOZ_PV%%_rc*}" # Handle rc for SRC_URI
 
 if [[ ${MOZ_ESR} == 1 ]] ; then
 	# ESR releases have slightly different version numbers
@@ -27,8 +27,16 @@ if [[ ${MOZ_ESR} == 1 ]] ; then
 fi
 
 # Patch version
-PATCH="${PN}-65.0-patches-04"
+PATCH="${PN}-66.0-patches-05"
+
 MOZ_HTTP_URI="https://archive.mozilla.org/pub/${PN}/releases"
+MOZ_SRC_URI="${MOZ_HTTP_URI}/${MOZ_PV}/source/firefox-${MOZ_PV}.source.tar.xz"
+
+if [[ "${PV}" == *_rc* ]]; then
+	MOZ_HTTP_URI="https://archive.mozilla.org/pub/${PN}/candidates/${MOZ_PV}-candidates/build${PV##*_rc}"
+	MOZ_LANGPACK_PREFIX="linux-i686/xpi/"
+	MOZ_SRC_URI="${MOZ_HTTP_URI}/source/${PN}-${MOZ_PV}.source.tar.xz -> $P.tar.xz"
+fi
 
 LLVM_MAX_SLOT=8
 
@@ -52,11 +60,11 @@ RESTRICT="!bindist? ( bindist )"
 
 PATCH_URIS=( https://dev.gentoo.org/~{anarchy,axs,polynomial-c,whissi}/mozilla/patchsets/${PATCH}.tar.xz )
 SRC_URI="${SRC_URI}
-	${MOZ_HTTP_URI}/${MOZ_PV}/source/firefox-${MOZ_PV}.source.tar.xz
+	${MOZ_SRC_URI}
 	${PATCH_URIS[@]}"
 
 CDEPEND="
-	>=dev-libs/nss-3.41
+	>=dev-libs/nss-3.42
 	>=dev-libs/nspr-4.19
 	>=app-text/hunspell-1.5.4:*
 	dev-libs/atk
@@ -87,15 +95,15 @@ CDEPEND="
 	x11-libs/libXfixes
 	x11-libs/libXrender
 	x11-libs/libXt
-	system-harfbuzz? ( >=media-libs/harfbuzz-1.4.2:0= >=media-gfx/graphite2-1.3.9-r1 )
-	system-icu? ( >=dev-libs/icu-60.2:= )
+	system-harfbuzz? ( >=media-libs/harfbuzz-2.3.1:0= >=media-gfx/graphite2-1.3.13 )
+	system-icu? ( >=dev-libs/icu-63.1:= )
 	system-jpeg? ( >=media-libs/libjpeg-turbo-1.2.1 )
 	system-libevent? ( >=dev-libs/libevent-2.0:0=[threads] )
 	system-libvpx? (
 		>=media-libs/libvpx-1.7.0:0=[postproc]
 		<media-libs/libvpx-1.8:0=[postproc]
 	)
-	system-sqlite? ( >=dev-db/sqlite-3.25.3:3[secure-delete,debug=] )
+	system-sqlite? ( >=dev-db/sqlite-3.26:3[secure-delete,debug=] )
 	system-webp? ( >=media-libs/libwebp-1.0.1:0= )
 	wifi? ( kernel_linux? ( >=sys-apps/dbus-0.60
 			>=dev-libs/dbus-glib-0.72
@@ -112,7 +120,7 @@ RDEPEND="${CDEPEND}
 DEPEND="${CDEPEND}
 	app-arch/zip
 	app-arch/unzip
-	>=dev-util/cbindgen-0.6.7
+	>=dev-util/cbindgen-0.6.8
 	>=net-libs/nodejs-8.11.0
 	>=sys-devel/binutils-2.30
 	sys-apps/findutils
@@ -512,9 +520,10 @@ src_configure() {
 	# Enable/Disable eme support
 	use eme-free && mozconfig_annotate '+eme-free' --disable-eme
 
-	# Setup api key for location services
+	# Setup api key for location services and safebrowsing, https://bugzilla.mozilla.org/show_bug.cgi?id=1531176#c34
 	echo -n "${_google_api_key}" > "${S}"/google-api-key
-	mozconfig_annotate '' --with-google-api-keyfile="${S}/google-api-key"
+	mozconfig_annotate '' --with-google-location-service-api-keyfile="${S}/google-api-key"
+	mozconfig_annotate '' --with-google-safebrowsing-api-keyfile="${S}/google-api-key"
 
 	mozconfig_annotate '' --enable-extensions="${MEXTENSIONS}"
 
