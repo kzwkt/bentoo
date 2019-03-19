@@ -144,6 +144,7 @@ src_configure() {
 		-DBUILD_tshark=$(usex tshark)
 		-DBUILD_udpdump=$(usex udpdump)
 		-DBUILD_wireshark=$(usex qt5)
+		-DCMAKE_INSTALL_DOCDIR="/usr/share/doc/${PF}"
 		-DDISABLE_WERROR=yes
 		-DENABLE_BCG729=$(usex bcg729)
 		-DENABLE_CAP=$(usex filecaps caps)
@@ -216,9 +217,6 @@ src_install() {
 	fi
 
 	prune_libtool_files
-
-	mv "${D}"/usr/share/doc/${PN}/* "${D}"/usr/share/doc/${PF}/ || die
-	rmdir "${D}"/usr/share/doc/${PN} || die
 }
 
 pkg_postinst() {
