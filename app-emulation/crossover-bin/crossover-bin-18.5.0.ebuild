@@ -40,42 +40,42 @@ RDEPEND="${DEPEND}
 	dev-util/desktop-file-utils
 	!app-emulation/crossover-office-pro-bin
 	!app-emulation/crossover-office-bin
-	capi? ( net-libs/libcapi )
-	cups? ( net-print/cups )
-	gsm? ( media-sound/gsm )
-	jpeg? ( virtual/jpeg )
+	capi? ( net-libs/libcapi[abi_x86_32(-)] )
+	cups? ( net-print/cups[abi_x86_32(-)] )
+	gsm? ( media-sound/gsm[abi_x86_32(-)] )
+	jpeg? ( virtual/jpeg[abi_x86_32(-)] )
 	lcms? ( media-libs/lcms:2 )
-	ldap? ( net-nds/openldap )
-	gphoto2? ( media-libs/libgphoto2 )
-	mp3? ( >=media-sound/mpg123-1.5.0 )
-	nls? ( sys-devel/gettext )
-	openal? ( media-libs/openal )
-	opencl? ( virtual/opencl )
+	ldap? ( net-nds/openldap[abi_x86_32(-)] )
+	gphoto2? ( media-libs/libgphoto2[abi_x86_32(-)] )
+	mp3? ( >=media-sound/mpg123-1.5.0[abi_x86_32(-)] )
+	nls? ( sys-devel/gettext[abi_x86_32(-)] )
+	openal? ( media-libs/openal[abi_x86_32(-)] )
+	opencl? ( virtual/opencl[abi_x86_32(-)] )
 	opengl? (
-		virtual/glu
-		virtual/opengl
+		virtual/glu[abi_x86_32(-)]
+		virtual/opengl[abi_x86_32(-)]
 	)
-	png? ( media-libs/libpng:0 )
-	scanner? ( media-gfx/sane-backends )
-	ssl? ( dev-libs/openssl:0 )
-	v4l? ( media-libs/libv4l )
-	media-libs/alsa-lib
-	>=media-libs/freetype-2.0.0
-	media-libs/mesa
-	sys-auth/nss-mdns
-	sys-apps/util-linux
-	sys-libs/ncurses:5/5
-	sys-libs/zlib
-	x11-libs/libICE
-	x11-libs/libSM
-	x11-libs/libX11
-	x11-libs/libXau
-	x11-libs/libXdmcp
-	x11-libs/libXext
-	x11-libs/libXi
-	x11-libs/libXrandr
-	x11-libs/libXxf86vm
-	x11-libs/libxcb"
+	png? ( media-libs/libpng:0[abi_x86_32(-)] )
+	scanner? ( media-gfx/sane-backends[abi_x86_32(-)] )
+	ssl? ( dev-libs/openssl:0[abi_x86_32(-)] )
+	v4l? ( media-libs/libv4l[abi_x86_32(-)] )
+	media-libs/alsa-lib[abi_x86_32(-)]
+	>=media-libs/freetype-2.0.0[abi_x86_32(-)]
+	media-libs/mesa[abi_x86_32(-)]
+	sys-auth/nss-mdns[abi_x86_32(-)]
+	sys-apps/util-linux[abi_x86_32(-)]
+	sys-libs/ncurses:5/5[abi_x86_32(-)]
+	sys-libs/zlib[abi_x86_32(-)]
+	x11-libs/libICE[abi_x86_32(-)]
+	x11-libs/libSM[abi_x86_32(-)]
+	x11-libs/libX11[abi_x86_32(-)]
+	x11-libs/libXau[abi_x86_32(-)]
+	x11-libs/libXdmcp[abi_x86_32(-)]
+	x11-libs/libXext[abi_x86_32(-)]
+	x11-libs/libXi[abi_x86_32(-)]
+	x11-libs/libXrandr[abi_x86_32(-)]
+	x11-libs/libXxf86vm[abi_x86_32(-)]
+	x11-libs/libxcb[abi_x86_32(-)]"
 
 pkg_nofetch() {
 	einfo "Please visit ${HOMEPAGE}"
