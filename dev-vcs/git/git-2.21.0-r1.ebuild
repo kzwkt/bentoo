@@ -6,7 +6,7 @@ EAPI=6
 GENTOO_DEPEND_ON_PERL=no
 
 # bug #329479: git-remote-testgit is not multiple-version aware
-PYTHON_COMPAT=( python2_7 )
+PYTHON_COMPAT=( python{2_7,3_{5,6,7}} )
 PLOCALES="bg ca de es fr is it ko pt_PT ru sv vi zh_CN"
 if [[ ${PV} == *9999 ]]; then
 	SCM="git-r3"
@@ -31,7 +31,7 @@ inherit toolchain-funcs elisp-common l10n perl-module bash-completion-r1 python-
 MY_PV="${PV/_rc/.rc}"
 MY_P="${PN}-${MY_PV}"
 
-DOC_VER=${MY_PV}
+DOC_VER="${MY_PV}"
 
 DESCRIPTION="stupid content tracker: distributed VCS designed for speed and efficiency"
 HOMEPAGE="https://www.git-scm.com/"
